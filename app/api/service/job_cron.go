@@ -29,7 +29,7 @@ func registerCronJob(job string, fn cronJobFunc) {
 
 func (p *Service) initialJobCron() {
 	doOnce.Do(func() {
-		registerCronJob(def.CronJob.DoSmallTask, p.cronDoSmallTask)
+		registerCronJob(def.CronJob.CronDoSmallTask, p.cronDoSmallTask)
 	})
 }
 

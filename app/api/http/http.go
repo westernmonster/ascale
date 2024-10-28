@@ -32,6 +32,11 @@ func setupRoute(e *vin.Engine) {
 	e.Ping(ping)
 	e.Register(register)
 
+	job := e.Group("/job")
+	{
+		job.POST("/trigger", cronJob)
+	}
+
 	base := e.Group("/")
 	route(base)
 }

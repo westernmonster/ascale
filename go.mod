@@ -10,6 +10,7 @@ require (
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/codemodus/kace v0.5.1
 	github.com/gin-contrib/sse v0.1.0
+	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/go-playground/validator/v10 v10.22.1
 	github.com/go-sql-driver/mysql v1.8.1

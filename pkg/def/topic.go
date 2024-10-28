@@ -6,9 +6,9 @@ import (
 )
 
 var CronJob = struct {
-	DoSmallTask string
+	CronDoSmallTask string
 }{
-	DoSmallTask: "DoSmallTask",
+	CronDoSmallTask: "CronDoSmallTask",
 }
 
 var Topics = struct {

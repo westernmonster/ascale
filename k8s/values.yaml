@@ -5,9 +5,9 @@ global:
   type: api
   name: ascale 
   gitVersion: c91b2e62e7957cc8b8dcc5b78c2b0f7fc544c663
-  googleCredential: false
+  googleCredential: true 
 ingress:
-  enabled: false
+  enabled: true 
   annotations:
     kubernetes.io/ingress.class: "nginx"
     cert-manager.io/issuer: letsencrypt-prod
@@ -27,8 +27,14 @@ server:
     CI: 1
     ENV: "production"
     GCLOUD_PROJECT: "ascale-439911"
+    CLOUDSDK_CONTAINER_CLUSTER: "ascale-gke"
+    CLOUDSDK_COMPUTE_ZONE: "asia-east2-a"
+    PUBSUB_PROJECT_ID: "ascale-439911"
+    GRPC_GO_LOG_SEVERITY_LEVEL: "DEBUG"
+    DEPLOY_ENV: "uat"
+    APP_ID: "ascale"
 worker:
-  enabled: false
+  enabled: true 
   replicas: 1
   image: gcr.io/ascale-439911/ascale-worker:latest
   name: ascale-worker
@@ -37,11 +43,17 @@ worker:
     CI: 1
     ENV: "production"
     GCLOUD_PROJECT: "ascale-439911"
+    CLOUDSDK_CONTAINER_CLUSTER: "ascale-gke"
+    CLOUDSDK_COMPUTE_ZONE: "asia-east2-a"
+    PUBSUB_PROJECT_ID: "ascale-439911"
+    GRPC_GO_LOG_SEVERITY_LEVEL: "DEBUG"
+    DEPLOY_ENV: "uat"
+    APP_ID: "ascale"
 
 # GKE use UTC as default CronJob timezone,
 # if you want cronjob to be execute at specific time, convert time to UTC timezone
 cronjob:
   jobs:
     - name: "cron-send-messages"
-      job: "DoSmallTask"
-      schedule: "*/2 * * * *"
+      job: "CronDoSmallTask"
+      schedule: "*/1 * * * *"

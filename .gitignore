@@ -15,3 +15,4 @@ venom*
 database/migrations/.idea/workspace.xml
 .terraform
 .terraform*
+/cmd

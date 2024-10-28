@@ -21,10 +21,10 @@ const (
 // env default value.
 const (
 	// env
-	_region    = "us-west2"
-	_zone      = "us-west2-a"
+	_region    = "asia-east2"
+	_zone      = "asia-east2-a"
 	_deployEnv = "uat"
-	_projectID = "done-280702"
+	_projectID = "ascale-439911"
 )
 
 // env configuration.
@@ -113,7 +113,7 @@ func addFlag(fs *flag.FlagSet) {
 		&SiteURL,
 		"siteurl",
 		os.Getenv("SITE_URL"),
-		"site url, example: http://dev.donefirst.com",
+		"site url, example: http://dev.liyinjia.com",
 	)
 	fs.StringVar(&Domain, "domain", os.Getenv("DOMAIN"), "domain, example: dev.donefirst.com")
 	fs.StringVar(

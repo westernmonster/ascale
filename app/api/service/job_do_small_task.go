@@ -32,5 +32,5 @@ func (p *Service) jobDoSmallTask(c context.Context, msg *pubsub.Message) {
 		return
 	}
 
-	fmt.Println(cmd)
+	log.For(c).Info("Do some small task")
 }
