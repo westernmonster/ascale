@@ -1,7 +1,6 @@
 package service
 
 import (
-	"ascale/pkg/conf/env"
 	"ascale/pkg/def"
 	"ascale/pkg/log"
 	"ascale/pkg/stat/prom"
@@ -132,16 +131,18 @@ func (p *Service) subscriptions() {
 		}()
 	}
 
-	deadPolicy := &pubsub.DeadLetterPolicy{
-		DeadLetterTopic: fmt.Sprintf(
-			"projects/%s/topics/%s",
-			env.ProjectID,
-			def.Topics.DeadLetter,
-		),
-		MaxDeliveryAttempts: 5,
-	}
+	// deadPolicy := &pubsub.DeadLetterPolicy{
+	// 	DeadLetterTopic: fmt.Sprintf(
+	// 		"projects/%s/topics/%s",
+	// 		env.ProjectID,
+	// 		def.Topics.DeadLetter,
+	// 	),
+	// 	MaxDeliveryAttempts: 5,
+	// }
 
-	// createSubscription(ctx, def.Topics.CronJob, 1, nil, p.jobCron)
+	createSubscription(ctx, def.Topics.CronJob, 1, nil, p.jobCron)
+
+	createSubscription(ctx, def.Topics.DoSmallTask, 1, nil, p.jobDoSmallTask)
 
 	// DeadLetter
 	createSubscription(ctx, def.Topics.DeadLetter, 1, nil, p.logDeadLetter)

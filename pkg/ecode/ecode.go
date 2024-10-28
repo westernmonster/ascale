@@ -45,7 +45,7 @@ type Codes interface {
 	// Message get code message.
 	Message() string
 
-	//Detail get error detail,it may be nil.
+	// Detail get error detail,it may be nil.
 	Details() []interface{}
 	// Equal for compatible.
 	// Deprecated: please use ecode.EqualError.
