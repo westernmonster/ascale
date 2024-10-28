@@ -47,6 +47,7 @@ steps:
     id: publish
 options:
   substitutionOption: ALLOW_LOOSE
+  logging: CLOUD_LOGGING_ONLY
 substitutions:
   _APP_NAME: ascale 
   _WORKER_NAME: ascale-worker
