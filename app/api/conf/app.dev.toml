@@ -1,0 +1,43 @@
+[vin]
+  network = "tcp"
+  address = "0.0.0.0:8000"
+  maxListen = 10
+  timeout="20s"
+  readTimeout="5s"
+  writeTimeout="10s"
+[redis]
+  name = "redis"
+  proto = "tcp"
+  addr = "localhost:6379"
+  database = 1
+  maxIdle = 100
+  maxActive = 100
+  dialTimeout = "1s"
+  readTimeout = "1s"
+  writeTimeout = "1s"
+  idleTimeout = "10s"
+
+[db]
+  addr = "localhost:3306"
+  dsn = "root:123456@tcp(localhost:3306)/done_api_dev?&parseTime=true&loc=Local&charset=utf8mb4"
+  readDSN = []
+  active = 25
+  idle = 25
+  idleTimeout ="5m"
+  queryTimeout = "5s"
+  execTimeout = "5s"
+  tranTimeout = "10s"
+  [db.breaker]
+  window = "3s"
+  sleep = "100ms"
+  bucket = 10
+  ratio = 0.5
+  request = 100
+[tracer]
+  probability=1.2
+
+
+[dc]
+  num = 1
+  desc = "datacenter 1"
+

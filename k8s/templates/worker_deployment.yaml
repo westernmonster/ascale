@@ -1,0 +1,80 @@
+{{- if .Values.worker.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.worker.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Values.worker.name }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Values.worker.name }}
+    platform: {{ .Values.global.platform }}
+    type: {{ .Values.worker.type }}
+    gitVersion: {{ .Values.global.gitVersion }}
+spec:
+  replicas: {{ .Values.worker.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.worker.name }}
+      release: {{ .Release.Name }}
+      component: server
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.worker.name }}
+        release: {{ .Release.Name }}
+        component: server
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+    spec:
+      terminationGracePeriodSeconds: 10
+      dnsPolicy: ClusterFirst
+      securityContext:
+        fsGroup: 1000
+      containers:
+        - name: {{ .Values.worker.name }}
+          image: "{{.Values.worker.image}}"
+          env:
+            {{- if .Values.global.googleCredential }}
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /var/secrets/google/key.json
+            {{- end }}
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            {{- include "app.exEnv" .Values.worker | nindent 12 }}
+          ports:
+            - containerPort: 8000
+              name: http
+          livenessProbe:
+            httpGet:
+              path: /monitor/ping
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 20
+            timeoutSeconds: 4
+          volumeMounts:
+            - name: config-volume
+              mountPath: /go/bin/config
+              readOnly: true
+            {{- if .Values.global.googleCredential }}
+            - name: google-cloud-key
+              mountPath: /var/secrets/google
+            {{- end }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: acesoconf
+        {{- if .Values.global.googleCredential }}
+        - name: google-cloud-key
+          secret:
+            secretName: pubsub-key
+        {{- end }}
+{{- end }}
+

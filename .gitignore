@@ -1,0 +1,17 @@
+/main
+/ascale
+/*.idea
+/.vscode
+/.vs
+/tmp
+/tests/e2e/tmp
+/*.json
+/*.sql
+.DS_Store
+/dump.rdb
+/worker
+/tests/results
+venom*
+database/migrations/.idea/workspace.xml
+.terraform
+.terraform*

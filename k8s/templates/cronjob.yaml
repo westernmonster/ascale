@@ -1,0 +1,49 @@
+{{- $namespace := .Release.Namespace  -}}
+{{- $name := .Release.Name  -}}
+{{- $service := .Release.Service  -}}
+{{- $platform := .Values.global.platform  -}}
+{{- $gitVersion := .Values.global.gitVersion  -}}
+
+{{- range $job := .Values.cronjob.jobs }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  annotations:
+  name: {{ $job.name }}
+  namespace: {{ $namespace }}
+  labels:
+    app: {{ $name }}
+    heritage: {{ $service }}
+    release: {{ $name }}
+    platform: {{ $platform }}
+    gitVersion: {{ $gitVersion }}
+spec:
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 1
+  schedule: {{ $job.schedule | quote }}
+  successfulJobsHistoryLimit: 1
+  suspend: false
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: "httpie"
+            image: alpine/httpie
+            imagePullPolicy: IfNotPresent
+            command: ["http"]
+            args:
+              [
+                "POST",
+                "http://{{ $name }}/job/trigger",
+                "job={{$job.job}}",
+                "--ignore-stdin",
+                "--timeout=2.5",
+              ]
+          dnsPolicy: ClusterFirst
+          restartPolicy: Never
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+---
+{{- end -}}
