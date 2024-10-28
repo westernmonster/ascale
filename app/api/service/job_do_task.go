@@ -14,19 +14,19 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func (p *Service) jobDoSmallTask(c context.Context, msg *pubsub.Message) {
+func (p *Service) jobDoTask(c context.Context, msg *pubsub.Message) {
 	now := xtime.Now()
 	var err error
 	defer func() {
 		msg.Ack()
 		prom.Consumer.Timing(
-			fmt.Sprintf("consumer:%s", def.Topics.DoSmallTask),
+			fmt.Sprintf("consumer:%s", def.Topics.DoTask),
 			int64(time.Since(now)/time.Millisecond),
 		)
-		prom.Consumer.Incr(fmt.Sprintf("consumer:%s", def.Topics.DoSmallTask))
+		prom.Consumer.Incr(fmt.Sprintf("consumer:%s", def.Topics.DoTask))
 	}()
 
-	cmd := new(model.DoSmallTaskCommand)
+	cmd := new(model.DoTaskCommand)
 	if err = jsoniter.Unmarshal(msg.Data, cmd); err != nil {
 		log.For(c).Errorf("jobSendMail error(%+v)", err)
 		return

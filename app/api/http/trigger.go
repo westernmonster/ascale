@@ -7,7 +7,7 @@ import (
 	"ascale/pkg/net/http/vin"
 )
 
-func cronJob(c *vin.Context) {
+func triggerJob(c *vin.Context) {
 	arg := new(model.ArgJob)
 	if e := c.BindJSON(arg); e != nil {
 		return
@@ -18,5 +18,5 @@ func cronJob(c *vin.Context) {
 		c.JSON(nil, ecode.RequestErr)
 		return
 	}
-	c.JSON(nil, srv.CronJob(c, arg.Job))
+	c.JSON(nil, srv.TriggerJob(c, arg.Job))
 }

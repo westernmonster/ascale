@@ -6,23 +6,36 @@ import (
 
 var (
 	// LibClient for mc redis and db client.
-	LibClient = New().WithTimer("go_lib_client", []string{"method"}).WithState("go_lib_client_state", []string{"method", "name"}).WithCounter("go_lib_client_code", []string{"method", "code"})
+	LibClient = New().WithTimer("go_lib_client", []string{"method"}).
+			WithState("go_lib_client_state", []string{"method", "name"}).
+			WithCounter("go_lib_client_code", []string{"method", "code"})
 	// RPCClient rpc client
-	RPCClient = New().WithTimer("go_rpc_client", []string{"method"}).WithState("go_rpc_client_state", []string{"method", "name"}).WithCounter("go_rpc_client_code", []string{"method", "code"})
+	RPCClient = New().WithTimer("go_rpc_client", []string{"method"}).
+			WithState("go_rpc_client_state", []string{"method", "name"}).
+			WithCounter("go_rpc_client_code", []string{"method", "code"})
 	// HTTPClient http client
-	HTTPClient = New().WithTimer("go_http_client", []string{"method"}).WithState("go_http_client_state", []string{"method", "name"}).WithCounter("go_http_client_code", []string{"method", "code"})
+	HTTPClient = New().WithTimer("go_http_client", []string{"method"}).
+			WithState("go_http_client_state", []string{"method", "name"}).
+			WithCounter("go_http_client_code", []string{"method", "code"})
 	// HTTPServer for http server
-	HTTPServer = New().WithTimer("go_http_server", []string{"user", "method"}).WithCounter("go_http_server_code", []string{"user", "method", "code"})
+	HTTPServer = New().WithTimer("go_http_server", []string{"user", "method"}).
+			WithCounter("go_http_server_code", []string{"user", "method", "code"})
 	// RPCServer for rpc server
-	RPCServer = New().WithTimer("go_rpc_server", []string{"user", "method"}).WithCounter("go_rpc_server_code", []string{"user", "method", "code"})
+	RPCServer = New().WithTimer("go_rpc_server", []string{"user", "method"}).
+			WithCounter("go_rpc_server_code", []string{"user", "method", "code"})
 	// BusinessErrCount for business err count
-	BusinessErrCount = New().WithCounter("go_business_err_count", []string{"name"}).WithState("go_business_err_state", []string{"name"})
+	BusinessErrCount = New().WithCounter("go_business_err_count", []string{"name"}).
+				WithState("go_business_err_state", []string{"name"})
 	// BusinessInfoCount for business info count
-	BusinessInfoCount = New().WithCounter("go_business_info_count", []string{"name"}).WithState("go_business_info_state", []string{"name"})
+	BusinessInfoCount = New().WithCounter("go_business_info_count", []string{"name"}).
+				WithState("go_business_info_state", []string{"name"})
 
-	CronJob = New().WithTimer("go_cronjob", []string{"name"}).WithState("go_cronjob_state", []string{"name"}).WithCounter("go_cronjob_total", []string{"name"})
+	TriggerJob = New().WithTimer("go_triggerjob", []string{"name"}).
+			WithState("go_triggerjob_state", []string{"name"}).
+			WithCounter("go_triggerjob_total", []string{"name"})
 
-	Consumer = New().WithTimer("go_consumer", []string{"name"}).WithCounter("go_consumer_total", []string{"name"})
+	Consumer = New().WithTimer("go_consumer", []string{"name"}).
+			WithCounter("go_consumer_total", []string{"name"})
 	// CacheHit for cache hit
 	CacheHit = New().WithCounter("go_cache_hit", []string{"name"})
 	// CacheMiss for cache miss

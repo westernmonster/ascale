@@ -5,12 +5,12 @@ type PublishMessage struct {
 	Message interface{}
 }
 
-type CronJobCommand struct {
+type TriggerCommand struct {
 	Job         string
 	TriggerTime int64
 }
 
-type DoSmallTaskCommand struct {
+type DoTaskCommand struct {
 	Name        string
 	TriggerTime int64
 }

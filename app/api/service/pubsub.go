@@ -140,9 +140,9 @@ func (p *Service) subscriptions() {
 	// 	MaxDeliveryAttempts: 5,
 	// }
 
-	createSubscription(ctx, def.Topics.CronJob, 1, nil, p.jobCron)
+	createSubscription(ctx, def.Topics.Trigger, 1, nil, p.jobTrigger)
 
-	createSubscription(ctx, def.Topics.DoSmallTask, 1, nil, p.jobDoSmallTask)
+	createSubscription(ctx, def.Topics.DoTask, 1, nil, p.jobDoTask)
 
 	// DeadLetter
 	createSubscription(ctx, def.Topics.DeadLetter, 1, nil, p.logDeadLetter)

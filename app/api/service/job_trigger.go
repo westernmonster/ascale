@@ -23,13 +23,14 @@ var (
 	cronJobs map[string]cronJobFunc = make(map[string]cronJobFunc)
 )
 
-func registerCronJob(job string, fn cronJobFunc) {
+func registerTriggerJob(job string, fn cronJobFunc) {
 	cronJobs[job] = fn
 }
 
-func (p *Service) initialJobCron() {
+func (p *Service) initialTriggerJob() {
 	doOnce.Do(func() {
-		registerCronJob(def.CronJob.CronDoSmallTask, p.cronDoSmallTask)
+		registerTriggerJob(def.TriggerJob.CronSendLittleMessage, p.cronSendLittleMessages)
+		registerTriggerJob(def.TriggerJob.SendHugeMessage, p.triggerSendHugeAmountMessages)
 	})
 }
 
@@ -65,9 +66,9 @@ func (p *Service) doPublishConcurrently(
 	wg.Wait()
 }
 
-func (p *Service) jobCron(c context.Context, msg *pubsub.Message) {
+func (p *Service) jobTrigger(c context.Context, msg *pubsub.Message) {
 	var err error
-	cmd := new(model.CronJobCommand)
+	cmd := new(model.TriggerCommand)
 	if err = jsoniter.Unmarshal(msg.Data, cmd); err != nil {
 		log.For(c).Errorf("jobCron error(%+v)", err)
 		msg.Ack()
@@ -85,11 +86,11 @@ func (p *Service) jobCron(c context.Context, msg *pubsub.Message) {
 	now := time.Now()
 	beginFun := xtime.NowUnix()
 	defer func() {
-		prom.CronJob.Timing(
+		prom.TriggerJob.Timing(
 			fmt.Sprintf("cronjob:%s", cmd.Job),
 			int64(time.Since(now)/time.Millisecond),
 		)
-		prom.CronJob.Incr(fmt.Sprintf("cronjob:%s", cmd.Job))
+		prom.TriggerJob.Incr(fmt.Sprintf("cronjob:%s", cmd.Job))
 		endFun := xtime.NowUnix()
 		if endFun-beginFun > 60 {
 			log.For(c).

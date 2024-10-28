@@ -34,7 +34,7 @@ func setupRoute(e *vin.Engine) {
 
 	job := e.Group("/job")
 	{
-		job.POST("/trigger", cronJob)
+		job.POST("/trigger", triggerJob)
 	}
 
 	base := e.Group("/")

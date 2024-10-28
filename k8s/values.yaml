@@ -20,8 +20,8 @@ ingress:
       hosts:
         - api-uat.liyinjia.com
 server:
-  serviceAccountName: done-sql
-  replicas: 1
+  serviceAccountName: ascale-sql
+  replicas: 2
   bootstrapExpect: 1
   exEnv:
     CI: 1
@@ -35,7 +35,7 @@ server:
     APP_ID: "ascale"
 worker:
   enabled: true 
-  replicas: 1
+  replicas: 10
   image: gcr.io/ascale-439911/ascale-worker:latest
   name: ascale-worker
   type: worker
@@ -55,5 +55,5 @@ worker:
 cronjob:
   jobs:
     - name: "cron-send-messages"
-      job: "CronDoSmallTask"
+      job: "CronSendLittleMessage"
       schedule: "*/1 * * * *"

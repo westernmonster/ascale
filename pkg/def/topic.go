@@ -5,18 +5,20 @@ import (
 	"fmt"
 )
 
-var CronJob = struct {
-	CronDoSmallTask string
+var TriggerJob = struct {
+	CronSendLittleMessage string
+	SendHugeMessage       string
 }{
-	CronDoSmallTask: "CronDoSmallTask",
+	CronSendLittleMessage: "CronSendLittleMessage",
+	SendHugeMessage:       "SendHugeMessage",
 }
 
 var Topics = struct {
-	CronJob     string
-	DoSmallTask string
-	DeadLetter  string
+	Trigger    string
+	DoTask     string
+	DeadLetter string
 }{
-	CronJob:     fmt.Sprintf(`%s-cron-job`, env.DeployEnv),
-	DoSmallTask: fmt.Sprintf(`%s-do-small-task-send`, env.DeployEnv),
-	DeadLetter:  fmt.Sprintf(`%s-deadletter`, env.DeployEnv),
+	Trigger:    fmt.Sprintf(`%s-trigger`, env.DeployEnv),
+	DoTask:     fmt.Sprintf(`%s-do-task`, env.DeployEnv),
+	DeadLetter: fmt.Sprintf(`%s-deadletter`, env.DeployEnv),
 }

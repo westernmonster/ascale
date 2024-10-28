@@ -49,7 +49,7 @@ func New(c *conf.Config) (s *Service) {
 	}
 
 	s.startSubscriptions()
-	s.initialJobCron()
+	s.initialTriggerJob()
 	go s.cacheproc()
 	return
 }
