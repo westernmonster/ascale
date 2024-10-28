@@ -7,7 +7,6 @@ require (
 	cloud.google.com/go/storage v1.10.0
 	github.com/BurntSushi/toml v0.3.1
 	github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace v0.10.1-0.20200828070728-ba72e89a4087
-	github.com/Unleash/unleash-client-go/v3 v3.9.2
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/codemodus/kace v0.5.1
 	github.com/gin-contrib/sse v0.1.0
@@ -40,7 +39,6 @@ require (
 require (
 	cloud.google.com/go v0.61.0 // indirect
 	filippo.io/edwards25519 v1.1.0 // indirect
-	github.com/Masterminds/semver/v3 v3.1.1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -67,8 +65,6 @@ require (
 	github.com/prometheus/common v0.55.0 // indirect
 	github.com/prometheus/procfs v0.15.1 // indirect
 	github.com/rogpeppe/go-internal v1.10.0 // indirect
-	github.com/stretchr/objx v0.5.2 // indirect
-	github.com/twmb/murmur3 v1.1.5 // indirect
 	go.opencensus.io v0.22.4 // indirect
 	go.uber.org/multierr v1.10.0 // indirect
 	golang.org/x/crypto v0.24.0 // indirect

@@ -1,5 +1,5 @@
 global:
-  image: gcr.io/ascale-439911/ascale:1.0.3
+  image: gcr.io/ascale-439911/ascale:latest
   pullPolicy: IfNotPresent
   platform: donefirst
   type: api
@@ -30,7 +30,7 @@ server:
 worker:
   enabled: false
   replicas: 1
-  image: gcr.io/ascale-439911/ascale-worker:1.0.3
+  image: gcr.io/ascale-439911/ascale-worker:latest
   name: ascale-worker
   type: worker
   exEnv:
@@ -43,5 +43,5 @@ worker:
 cronjob:
   jobs:
     - name: "cron-send-messages"
-      job: "SendMessages"
+      job: "DoSmallTask"
       schedule: "*/2 * * * *"

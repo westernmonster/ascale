@@ -8,7 +8,7 @@
 [redis]
   name = "redis"
   proto = "tcp"
-  addr = "localhost:6379"
+  addr = "10.141.203.165:6379"
   database = 1
   maxIdle = 100
   maxActive = 100

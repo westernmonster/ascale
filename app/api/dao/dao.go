@@ -40,13 +40,13 @@ func (d *Dao) Redis() *redis.Pool {
 
 // Ping check db and mc health.
 func (d *Dao) Ping(c context.Context) (err error) {
-	if err = d.db.Ping(c); err != nil {
-		log.Info(fmt.Sprintf("dao.db.Ping() error(%v)", err))
-	}
-
-	// if err = d.pingRedis(c); err != nil {
-	// 	return
+	// if err = d.db.Ping(c); err != nil {
+	// 	log.Info(fmt.Sprintf("dao.db.Ping() error(%v)", err))
 	// }
+
+	if err = d.pingRedis(c); err != nil {
+		return
+	}
 
 	return
 }
