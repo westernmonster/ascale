@@ -1,0 +1,69 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - "-t"
+      - "gcr.io/$PROJECT_ID/$_APP_NAME:$_K8S_NAMESPACE-ascale-$COMMIT_SHA"
+      - .
+      - "-f"
+      - $_DOCKERFILE_NAME
+    id: BuildServer
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - "gcr.io/$PROJECT_ID/$_APP_NAME:$_K8S_NAMESPACE-ascale-$COMMIT_SHA"
+    waitFor: ["BuildServer"]
+    id: PushServer
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - "-t"
+      - "gcr.io/$PROJECT_ID/$_APP_NAME:$_K8S_NAMESPACE-ascale-worker-$COMMIT_SHA"
+      - .
+      - "-f"
+      - $_WORKER_DOCKERFILE_NAME
+    waitFor: ["-"]
+    id: BuildWorker
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - "gcr.io/$PROJECT_ID/$_APP_NAME:$_K8S_NAMESPACE-ascale-worker-$COMMIT_SHA"
+    waitFor: ["BuildWorker"]
+    id: PushWorker
+  - name: gcr.io/$PROJECT_ID/helm:latest
+    args:
+      - -n=$_K8S_NAMESPACE
+      - upgrade
+      - -i
+      - $_APP_NAME
+      - ./k8s
+      - --set
+      - global.image=gcr.io/$PROJECT_ID/$_APP_NAME:$_K8S_NAMESPACE-aceso-$COMMIT_SHA,worker.image=gcr.io/$PROJECT_ID/$_APP_NAME:$_K8S_NAMESPACE-aceso-worker-$COMMIT_SHA,global.gitVersion=$COMMIT_SHA,server.replicas=$_K8S_REPLICAS,ingress.enabled=$_ENABLE_INGRESS,ingress.hosts[0]=$_DOMAIN,ingress.tls[0].secretName=$_K8S_NAMESPACE-$_APP_NAME-tls,ingress.tls[0].hosts[0]=$_DOMAIN,worker.enabled=$_WORKER_ENABLED,worker.replicas=$_WORKER_REPLICAS,server.exEnv.DEPLOY_ENV=$_K8S_NAMESPACE,server.exEnv.APP_ID=$_APP_NAME,server.exEnv.DOMAIN=$_DOMAIN, server.exEnv.SITE_URL=$_BASE_URL,worker.exEnv.DEPLOY_ENV=$_K8S_NAMESPACE,worker.exEnv.APP_ID=$_WORKER_NAME,worker.exEnv.DOMAIN=$_DOMAIN,global.googleCredential=$_GOOGLE_CREDENTIAL_ENABLED,worker.exEnv.SITE_URL=$_BASE_URL
+    env:
+      - "CLOUDSDK_COMPUTE_ZONE=$_GKE_LOCATION"
+      - "CLOUDSDK_CONTAINER_CLUSTER=$_GKE_CLUSTER"
+      - "GCLOUD_PROJECT=done-280702"
+    waitFor: ["PushServer", "PushWorker"]
+    id: publish
+options:
+  substitutionOption: ALLOW_LOOSE
+substitutions:
+  _APP_NAME: ascale 
+  _WORKER_NAME: ascale-worker
+  _GKE_LOCATION: asia-east2-a
+  _GKE_CLUSTER: ascale-gke
+  _DOCKERFILE_NAME: Dockerfile
+  _K8S_NAMESPACE: uat
+  _K8S_REPLICAS: "1"
+  _ENABLE_INGRESS: "false"
+  _GOOGLE_CREDENTIAL_ENABLED: "false"
+  _WORKER_ENABLED: "false"
+  _WORKER_DOCKERFILE_NAME: DockerfileWorker
+  _WORKER_REPLICAS: "1"
+  _DOMAIN: api-uat.liyinjia.com
+  _BASE_URL: https://api-uat.liyinjia.com
+  _REDIS_URL: redis://10.141.203.165:6379/1
+tags:
+  - gcp-cloud-build-deploy
+  - $_K8S_APP_NAME
+
