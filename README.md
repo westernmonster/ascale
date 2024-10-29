@@ -66,4 +66,8 @@ kubectl -n=monitoring get secret prometheus-grafana -o jsonpath="{.data.admin-pa
 ![QPS](./assets/qps.png)
 
 #### REPLICAS
-![QPS](./assets/replicas.png)
+![REPLICAS](./assets/replicas.png)
+
+#### CPU & Memory
+![CPU](./assets/cpu.png)
+
