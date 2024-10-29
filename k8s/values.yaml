@@ -27,7 +27,7 @@ server:
     CI: 1
     ENV: "production"
     GCLOUD_PROJECT: "ascale-439911"
-    CLOUDSDK_CONTAINER_CLUSTER: "ascale-gke"
+    CLOUDSDK_CONTAINER_CLUSTER: "ascale-439911-gke"
     CLOUDSDK_COMPUTE_ZONE: "asia-east2-a"
     PUBSUB_PROJECT_ID: "ascale-439911"
     GRPC_GO_LOG_SEVERITY_LEVEL: "DEBUG"
@@ -43,7 +43,7 @@ worker:
     CI: 1
     ENV: "production"
     GCLOUD_PROJECT: "ascale-439911"
-    CLOUDSDK_CONTAINER_CLUSTER: "ascale-gke"
+    CLOUDSDK_CONTAINER_CLUSTER: "ascale-439911-gke"
     CLOUDSDK_COMPUTE_ZONE: "asia-east2-a"
     PUBSUB_PROJECT_ID: "ascale-439911"
     GRPC_GO_LOG_SEVERITY_LEVEL: "DEBUG"
