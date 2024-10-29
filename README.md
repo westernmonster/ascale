@@ -2,6 +2,8 @@
 
 ## Introduction
 
+[Video Presentation](https://www.youtube.com/watch?v=bv_r--E3l_8)
+
 The system consists of an API and a worker, where the API is required to respond quickly to web requests and the worker is responsible for handling time-consuming tasks. They communicate with each other through message queues.
 
 There are two methods here, one is a cronjob that simulates normal traffic requests. The other is a manual trigger that throws a large number of messages into the message queue to simulate high traffic.
