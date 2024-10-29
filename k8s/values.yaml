@@ -35,7 +35,7 @@ server:
     APP_ID: "ascale"
 worker:
   enabled: true 
-  replicas: 10
+  replicas: 1
   image: gcr.io/ascale-439911/ascale-worker:latest
   name: ascale-worker
   type: worker

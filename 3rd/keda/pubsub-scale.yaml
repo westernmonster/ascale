@@ -1,0 +1,47 @@
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: keda-trigger-auth
+  namespace: uat
+spec:
+  secretTargetRef:
+  - parameter: GoogleApplicationCredentials
+    name: pubsub-key
+    key: key.json
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: keda-pubsub-app
+  namespace: uat 
+spec:
+  scaleTargetRef:
+    apiVersion:    apps/v1
+    kind:          Deployment
+    name:          ascale-worker
+  pollingInterval:  10
+  cooldownPeriod:   300
+  idleReplicaCount: 0
+  minReplicaCount:  2
+  maxReplicaCount:  1000
+  advanced:
+    restoreToOriginalReplicaCount: false
+    horizontalPodAutoscalerConfig:
+      name: keda-app-hpa
+      behavior:
+        scaleDown:
+          stabilizationWindowSeconds: 10
+          policies:
+          - type: Percent
+            value: 100
+            periodSeconds: 15
+  triggers:
+    - type: gcp-pubsub
+      authenticationRef:
+        name: keda-trigger-auth
+      metadata:
+        subscriptionName: "uat-do-task.sub.ascale"
+        mode: "SubscriptionSize"
+        value: "10"
+        desiredReplicas: "5"
+        credentialsFromEnv: "GOOGLE_APPLICATION_CREDENTIALS"

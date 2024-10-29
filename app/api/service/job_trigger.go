@@ -70,14 +70,14 @@ func (p *Service) jobTrigger(c context.Context, msg *pubsub.Message) {
 	var err error
 	cmd := new(model.TriggerCommand)
 	if err = jsoniter.Unmarshal(msg.Data, cmd); err != nil {
-		log.For(c).Errorf("jobCron error(%+v)", err)
+		log.For(c).Errorf("jobTrigger error(%+v)", err)
 		msg.Ack()
 		return
 	}
-	log.For(c).Infof("jobCron.start job(%+v), trigger(%d)", cmd.Job, cmd.TriggerTime)
+	log.For(c).Infof("jobTrigger.start job(%+v), trigger(%d)", cmd.Job, cmd.TriggerTime)
 	fn, ok := cronJobs[cmd.Job]
 	if !ok {
-		log.For(c).Errorf("p.jobCron(%s) not found.", cmd.Job)
+		log.For(c).Errorf("p.jobTrigger(%s) not found.", cmd.Job)
 		msg.Ack()
 		return
 	}
@@ -94,25 +94,25 @@ func (p *Service) jobTrigger(c context.Context, msg *pubsub.Message) {
 		endFun := xtime.NowUnix()
 		if endFun-beginFun > 60 {
 			log.For(c).
-				Warnf("p.jobCron.duration job (%+v) start(%+v) too long(%+v)", cmd.Job, now, endFun-beginFun)
+				Warnf("p.jobTrigger.duration job (%+v) start(%+v) too long(%+v)", cmd.Job, now, endFun-beginFun)
 		}
 	}()
 
 	var lock *dlock.Lock
 	if lock, err = p.dlock.Obtain(c, def.CronJobLock(cmd.Job), 30*time.Second, &dlock.Options{Context: c}); err != nil {
-		log.For(c).Errorf("obtain jobCron  lock failed,job (%+v) error(%+v) ", cmd.Job, err)
+		log.For(c).Errorf("obtain jobTrigger  lock failed,job (%+v) error(%+v) ", cmd.Job, err)
 		err = nil
 		return
 	}
 	defer lock.Release(c)
 
 	if err = fn(c); err != nil {
-		log.For(c).Errorf("p.jobCron(%s) error(%+v)", cmd.Job, err)
+		log.For(c).Errorf("p.jobTrigger(%s) error(%+v)", cmd.Job, err)
 		msg.Ack()
 		return
 	}
 
-	log.For(c).Infof("jobCron.Ack job(%+v), trigger(%d)", cmd.Job, cmd.TriggerTime)
+	log.For(c).Infof("jobTrigger.Ack job(%+v), trigger(%d)", cmd.Job, cmd.TriggerTime)
 
 	msg.Ack()
 

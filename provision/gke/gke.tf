@@ -23,6 +23,10 @@ resource "google_container_cluster" "primary" {
   name     = "${var.project_id}-gke"
   location = var.region
 
+  workload_identity_config {
+      workload_pool = "${var.project_id}.svc.id.goog"
+  }
+
   # We can't create a cluster with no node pool defined, but we want to only use
   # separately managed node pools. So we create the smallest possible default
   # node pool and immediately delete it.
@@ -46,6 +50,11 @@ resource "google_container_node_pool" "primary_nodes" {
     oauth_scopes = [
       "https://www.googleapis.com/auth/logging.write",
       "https://www.googleapis.com/auth/monitoring",
+      "https://www.googleapis.com/auth/devstorage.read_only",
+      "https://www.googleapis.com/auth/trace.append",
+      "https://www.googleapis.com/auth/bigquery",
+      "https://www.googleapis.com/auth/pubsub",
+      "https://www.googleapis.com/auth/servicecontrol"
     ]
 
     labels = {
@@ -60,6 +69,7 @@ resource "google_container_node_pool" "primary_nodes" {
     metadata = {
       disable-legacy-endpoints = "true"
     }
+
   }
 }
 

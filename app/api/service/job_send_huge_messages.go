@@ -4,6 +4,7 @@ import (
 	"ascale/app/api/model"
 	"ascale/pkg/def"
 	"context"
+	"fmt"
 	"time"
 )
 
@@ -21,6 +22,7 @@ func (p *Service) triggerSendHugeAmountMessages(c context.Context) (err error) {
 		case <-ctx.Done():
 			return
 		case <-time.After(every):
+			fmt.Println("-=====================")
 			p.Publish(
 				context.Background(),
 				def.Topics.DoTask,
