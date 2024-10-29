@@ -62,3 +62,8 @@ kubectl -n=monitoring port-forward service/prometheus-grafana 8999:80
 kubectl -n=monitoring get secret prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 ```
 
+#### QPS
+![QPS](./assets/qps.png)
+
+#### REPLICAS
+![QPS](./assets/replicas.png)
