@@ -20,12 +20,12 @@ spec:
     kind:          Deployment
     name:          ascale-worker
   pollingInterval:  10
-  cooldownPeriod:   300
+  cooldownPeriod:   200
   idleReplicaCount: 0
-  minReplicaCount:  2
-  maxReplicaCount:  1000
+  minReplicaCount:  4
+  maxReplicaCount: 500 
   advanced:
-    restoreToOriginalReplicaCount: false
+    restoreToOriginalReplicaCount: true 
     horizontalPodAutoscalerConfig:
       name: keda-app-hpa
       behavior:

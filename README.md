@@ -1,5 +1,92 @@
 # Auto Scale Sevice
 
+## Introduction
+
+The system consists of an API and a worker, where the API is required to respond quickly to web requests and the worker is responsible for handling time-consuming tasks. They communicate with each other through message queues.
+
+There are two methods here, one is a cronjob that simulates normal traffic requests. The other is a manual trigger that throws a large number of messages into the message queue to simulate high traffic.
+
+
+```go
+func (p *Service) triggerSendHugeAmountMessages(c context.Context) (err error) {
+	ctx, cancel := context.WithTimeout(c, 10*time.Minute)
+	defer cancel()
+
+	// Send a message every 10 millsecond, exit after 10 minutes
+	every := 10 * time.Millisecond
+	t := time.NewTicker(every)
+	defer t.Stop()
+
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-time.After(every):
+			p.Publish(
+				context.Background(),
+				def.Topics.DoTask,
+				&model.DoTaskCommand{Name: "do task"},
+			)
+		}
+	}
+}
+
+```
+
+```go
+func (p *Service) cronSendLittleMessages(c context.Context) (err error) {
+	ctx, cancel := context.WithTimeout(c, 1*time.Minute)
+	defer cancel()
+
+	// Send a message every 100 millsecond, exit after 1 minutes
+	every := 100 * time.Millisecond
+	t := time.NewTicker(every)
+	defer t.Stop()
+
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-time.After(every):
+			p.Publish(
+				context.Background(),
+				def.Topics.DoTask,
+				&model.DoTaskCommand{Name: "do task"},
+			)
+		}
+	}
+}
+
+```
+
+
+`jobDoTask` consume those messages.
+
+```
+func (p *Service) jobDoTask(c context.Context, msg *pubsub.Message) {
+	now := xtime.Now()
+	var err error
+	defer func() {
+		msg.Ack()
+		prom.Consumer.Timing(
+			fmt.Sprintf("consumer:%s", def.Topics.DoTask),
+			int64(time.Since(now)/time.Millisecond),
+		)
+		prom.Consumer.Incr(fmt.Sprintf("consumer:%s", def.Topics.DoTask))
+	}()
+
+	cmd := new(model.DoTaskCommand)
+	if err = jsoniter.Unmarshal(msg.Data, cmd); err != nil {
+		log.For(c).Errorf("jobSendMail error(%+v)", err)
+		return
+	}
+
+	log.For(c).Info("Do some small task")
+}
+
+```
+
+
 
 ## Deploy Steps
 

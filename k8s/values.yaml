@@ -21,7 +21,7 @@ ingress:
         - api-uat.liyinjia.com
 server:
   serviceAccountName: ascale-sql
-  replicas: 2
+  replicas: 4
   bootstrapExpect: 1
   exEnv:
     CI: 1
@@ -35,7 +35,7 @@ server:
     APP_ID: "ascale"
 worker:
   enabled: true 
-  replicas: 1
+  replicas: 6
   image: gcr.io/ascale-439911/ascale-worker:latest
   name: ascale-worker
   type: worker
